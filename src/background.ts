@@ -7,7 +7,7 @@ const domainsForOpenningInChrome = [
     'admin.google.com',
 ];
 
-let lastHandledTabId: number | undefined = undefined;
+const tabIdsToClose: number[] = [];
 
 chrome.tabs.onCreated.addListener((tab) => {
     openViaFinickyIfNeeded(tab);
@@ -17,6 +17,17 @@ chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
     openViaFinickyIfNeeded(tab);
 });
 
+chrome.windows.onFocusChanged.addListener((windowId) => {
+    if (windowId === chrome.windows.WINDOW_ID_NONE) {
+        while (tabIdsToClose.length > 0) {
+            const tabId = tabIdsToClose.pop();
+            if (tabId !== undefined) {
+                chrome.tabs.remove(tabId);
+            }
+        }
+    }
+});
+
 function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
     const url = getTabUrl(tab);
     const tabId = tab.id;
@@ -24,8 +35,7 @@ function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
         return;
     }
 
-    if (domainsForOpenningInChrome.includes(url.hostname) && tabId !== lastHandledTabId) {
-        lastHandledTabId = tabId;
+    if (domainsForOpenningInChrome.includes(url.hostname) && !tabIdsToClose.includes(tabId)) {
         let finickyUrl = url.toString();
         switch (url.protocol) {
             case 'https:':
@@ -39,6 +49,7 @@ function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
         }
         console.log('Open in Chrome', finickyUrl);
         chrome.tabs.update(tabId, { url: finickyUrl });
+        tabIdsToClose.push(tabId);
     }
 }
 
