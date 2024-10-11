@@ -7,13 +7,25 @@ const domainsForOpenningInChrome = [
     'admin.google.com',
 ];
 
+let lastHandledTabId: number | undefined = undefined;
+
 chrome.tabs.onCreated.addListener((tab) => {
+    openViaFinickyIfNeeded(tab);
+});
+
+chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
+    openViaFinickyIfNeeded(tab);
+});
+
+function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
     const url = getTabUrl(tab);
-    if (url === undefined || tab.id === undefined) {
+    const tabId = tab.id;
+    if (url === undefined || tabId === undefined) {
         return;
     }
 
-    if (domainsForOpenningInChrome.includes(url.hostname)) {
+    if (domainsForOpenningInChrome.includes(url.hostname) && tabId !== lastHandledTabId) {
+        lastHandledTabId = tabId;
         let finickyUrl = url.toString();
         switch (url.protocol) {
             case 'https:':
@@ -26,9 +38,9 @@ chrome.tabs.onCreated.addListener((tab) => {
                 return;
         }
         console.log('Open in Chrome', finickyUrl);
-        chrome.tabs.update(tab.id, { url: finickyUrl });
+        chrome.tabs.update(tabId, { url: finickyUrl });
     }
-});
+}
 
 function getTabUrl(tab: chrome.tabs.Tab): URL | undefined {
     if (tab.url === undefined) {
