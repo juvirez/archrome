@@ -36,17 +36,7 @@ function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
     }
 
     if (domainsForOpenningInChrome.includes(url.hostname) && !tabIdsToClose.includes(tabId)) {
-        let finickyUrl = url.toString();
-        switch (url.protocol) {
-            case 'https:':
-                finickyUrl = finickyUrl.replace('https:', 'finickys:');
-                break;
-            case 'http:':
-                finickyUrl = finickyUrl.replace('http:', 'finicky:');
-                break;
-            default:
-                return;
-        }
+        const finickyUrl = createFinickyUrl(url);
         console.log('Open in Chrome', finickyUrl);
         chrome.tabs.update(tabId, { url: finickyUrl });
         tabIdsToClose.push(tabId);
@@ -62,5 +52,20 @@ function getTabUrl(tab: chrome.tabs.Tab): URL | undefined {
         return new URL(tab.pendingUrl || tab.url);
     } catch (e) {
         return undefined;
+    }
+}
+
+function createFinickyUrl(url: URL): string | undefined {
+    let urlString = url.toString();
+    if (url.hostname === 'admin.google.com' && url.searchParams.get('continue')?.startsWith('http')) {
+        urlString = url.searchParams.get('continue') || urlString
+    }
+    switch (url.protocol) {
+        case 'https:':
+            return urlString.replace('https:', 'finickys:');
+        case 'http:':
+            return urlString.replace('http:', 'finicky:');
+        default:
+            return;
     }
 }
