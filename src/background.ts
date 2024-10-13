@@ -7,6 +7,8 @@ const domainsForOpenningInChrome = [
     'admin.google.com',
 ];
 
+const autoOpenLinksMenuItemId = 'auto-open-links';
+
 const tabIdsToClose: number[] = [];
 
 chrome.tabs.onCreated.addListener((tab) => {
@@ -28,7 +30,30 @@ chrome.windows.onFocusChanged.addListener((windowId) => {
     }
 });
 
+let isAutoOpenLinksViaFinicky: boolean = false;
+chrome.storage.local.get('autoOpenLinks').then(({ autoOpenLinks }) => {
+    isAutoOpenLinksViaFinicky = autoOpenLinks ?? true;
+    chrome.contextMenus.create({
+        id: autoOpenLinksMenuItemId,
+        title: 'Automatically open google workspace links via Finicky',
+        checked: isAutoOpenLinksViaFinicky,
+        type: 'checkbox',
+        contexts: ['action'],
+    });
+});
+
+chrome.contextMenus.onClicked.addListener((info) => {
+    if (info.menuItemId === autoOpenLinksMenuItemId) {
+        isAutoOpenLinksViaFinicky = info.checked ?? true;
+        chrome.storage.local.set({ autoOpenLinks: isAutoOpenLinksViaFinicky });
+    }
+});
+
 function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
+    if (!isAutoOpenLinksViaFinicky) {
+        return;
+    }
+
     const url = getTabUrl(tab);
     const tabId = tab.id;
     if (url === undefined || tabId === undefined) {
