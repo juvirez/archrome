@@ -54,7 +54,7 @@ function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
         return;
     }
 
-    const url = getTabUrl(tab);
+    const url = createURL(tab.pendingUrl || tab.url);
     const tabId = tab.id;
     if (url === undefined || tabId === undefined) {
         return;
@@ -68,13 +68,12 @@ function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
     }
 }
 
-function getTabUrl(tab: chrome.tabs.Tab): URL | undefined {
-    if (tab.url === undefined) {
+function createURL(url: string | undefined): URL | undefined {
+    if (url === undefined) {
         return undefined;
     }
-
     try {
-        return new URL(tab.pendingUrl || tab.url);
+        return new URL(url);
     } catch (e) {
         return undefined;
     }
@@ -83,7 +82,10 @@ function getTabUrl(tab: chrome.tabs.Tab): URL | undefined {
 function createFinickyUrl(url: URL): string | undefined {
     let urlString = url.toString();
     if (url.hostname === 'admin.google.com' && url.searchParams.get('continue')?.startsWith('http')) {
-        urlString = url.searchParams.get('continue') || urlString
+        const redirectUrl = createURL(url.searchParams.get('continue') ?? undefined);
+        if (redirectUrl !== undefined && domainsForOpenningInChrome.includes(redirectUrl.hostname)) {
+            urlString = redirectUrl.toString();
+        }
     }
     switch (url.protocol) {
         case 'https:':
