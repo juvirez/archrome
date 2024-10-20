@@ -3,10 +3,10 @@
     "name": "archrome",
     "version": "1.0.0",
     "icons": {
-        "16": "public/archrome.png",
-        "32": "public/archrome@2x.png",
-        "48": "public/archrome@3x.png",
-        "128": "public/archrome@8x.png"
+        "16": "icons/archrome.png",
+        "32": "icons/archrome@2x.png",
+        "48": "icons/archrome@3x.png",
+        "128": "icons/archrome@8x.png"
     },
     "permissions": [
         "tabs",
