@@ -67,12 +67,12 @@ function processTab(tab: chrome.tabs.Tab) {
 
 function openUrlViaFinicky(tab: chrome.tabs.Tab) {
     const url = createURL(tab.pendingUrl || tab.url);
+    const finickyUrl = createFinickyUrl(url);
     const tabId = tab.id;
-    if (url === undefined || tabId === undefined || tabIdsToClose.includes(tabId)) {
+    if (finickyUrl === undefined || tabId === undefined || tabIdsToClose.includes(tabId)) {
         return;
     }
 
-    const finickyUrl = createFinickyUrl(url);
     console.log('Open in Finicky', finickyUrl);
     chrome.tabs.update(tabId, { url: finickyUrl });
     tabIdsToClose.push(tabId);
@@ -107,7 +107,10 @@ function createURL(url: string | undefined): URL | undefined {
     }
 }
 
-function createFinickyUrl(url: URL): string | undefined {
+function createFinickyUrl(url: URL | undefined): string | undefined {
+    if (url === undefined) {
+        return;
+    }
     let urlString = url.toString();
     if (url.hostname === 'admin.google.com' && url.searchParams.get('continue')?.startsWith('http')) {
         const redirectUrl = createURL(url.searchParams.get('continue') ?? undefined);
