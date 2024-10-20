@@ -13,11 +13,11 @@ const autoOpenLinksMenuItemId = 'auto-open-links';
 const tabIdsToClose: number[] = [];
 
 chrome.tabs.onCreated.addListener((tab) => {
-    openViaFinickyIfNeeded(tab);
+    processTab(tab);
 });
 
 chrome.tabs.onUpdated.addListener((_tabId, _changeInfo, tab) => {
-    openViaFinickyIfNeeded(tab);
+    processTab(tab);
 });
 
 chrome.windows.onFocusChanged.addListener((windowId) => {
@@ -29,6 +29,11 @@ chrome.windows.onFocusChanged.addListener((windowId) => {
             }
         }
     }
+});
+
+chrome.action.disable();
+chrome.action.onClicked.addListener((tab) => {
+    openUrlViaFinicky(tab);
 });
 
 let isAutoOpenLinksViaFinicky: boolean = false;
@@ -50,23 +55,35 @@ chrome.contextMenus.onClicked.addListener((info) => {
     }
 });
 
-function openViaFinickyIfNeeded(tab: chrome.tabs.Tab) {
-    if (!isAutoOpenLinksViaFinicky) {
-        return;
+function processTab(tab: chrome.tabs.Tab) {
+    if (isneedToOpenViaFinicky(tab)) {
+        if (isAutoOpenLinksViaFinicky) {
+            openUrlViaFinicky(tab);
+        } else {
+            chrome.action.enable(tab.id);
+        }
     }
+}
 
+function openUrlViaFinicky(tab: chrome.tabs.Tab) {
     const url = createURL(tab.pendingUrl || tab.url);
     const tabId = tab.id;
-    if (url === undefined || tabId === undefined) {
+    if (url === undefined || tabId === undefined || tabIdsToClose.includes(tabId)) {
         return;
     }
 
-    if (domainsForOpenningInChrome.includes(url.hostname) && !tabIdsToClose.includes(tabId)) {
-        const finickyUrl = createFinickyUrl(url);
-        console.log('Open in Chrome', finickyUrl);
-        chrome.tabs.update(tabId, { url: finickyUrl });
-        tabIdsToClose.push(tabId);
+    const finickyUrl = createFinickyUrl(url);
+    console.log('Open in Finicky', finickyUrl);
+    chrome.tabs.update(tabId, { url: finickyUrl });
+    tabIdsToClose.push(tabId);
+}
+
+function isneedToOpenViaFinicky(tab: chrome.tabs.Tab): boolean {
+    const url = createURL(tab.pendingUrl || tab.url);
+    if (url === undefined) {
+        return false;
     }
+    return domainsForOpenningInChrome.includes(url.hostname);
 }
 
 function createURL(url: string | undefined): URL | undefined {

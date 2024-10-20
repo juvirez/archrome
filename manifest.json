@@ -13,6 +13,7 @@
         "storage",
         "contextMenus"
     ],
+    "action": {},
     "background": {
         "service_worker": "src/background.ts"
     }
