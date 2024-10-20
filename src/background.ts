@@ -83,7 +83,17 @@ function isneedToOpenViaFinicky(tab: chrome.tabs.Tab): boolean {
     if (url === undefined) {
         return false;
     }
-    return domainsForOpenningInChrome.includes(url.hostname);
+    if (url.hostname.endsWith('onelogin.com') || url.hostname === 'google.com') {
+        return false;
+    }
+
+    const isChrome = isGoogleChrome();
+    const isDomainInList = domainsForOpenningInChrome.includes(url.hostname);
+    return isChrome !== isDomainInList;
+}
+
+function isGoogleChrome(): boolean {
+    return navigator.userAgentData?.brands.some((brand) => brand.brand === 'Google Chrome') ?? false;
 }
 
 function createURL(url: string | undefined): URL | undefined {
