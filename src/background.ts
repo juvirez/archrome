@@ -5,6 +5,7 @@ const domainsForOpenningInChrome = [
     'calendar.google.com',
     'slides.google.com',
     'admin.google.com',
+    'meet.google.com',
 ];
 
 const autoOpenLinksMenuItemId = 'auto-open-links';
