@@ -27,7 +27,6 @@ For the extension to work correctly, you must configure the `finicky.js` file in
        match: finicky.matchHostnames([
          "docs.google.com",
          "mail.google.com",
-
          "calendar.google.com",
          "slides.google.com",
          "drive.google.com",
