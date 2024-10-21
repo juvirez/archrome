@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "archrome",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "icons": {
         "16": "icons/archrome.png",
         "32": "icons/archrome@2x.png",
