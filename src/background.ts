@@ -39,9 +39,12 @@ chrome.action.onClicked.addListener((tab) => {
 let isAutoOpenLinksViaFinicky: boolean = false;
 chrome.storage.local.get('autoOpenLinks').then(({ autoOpenLinks }) => {
     isAutoOpenLinksViaFinicky = autoOpenLinks ?? true;
+    const title = isGoogleChrome()
+        ? 'Automatically open all non-Google Workspace links in Arc'
+        : 'Automatically open Google Workspace links in Chrome';
     chrome.contextMenus.create({
         id: autoOpenLinksMenuItemId,
-        title: 'Automatically open google workspace links via Finicky',
+        title,
         checked: isAutoOpenLinksViaFinicky,
         type: 'checkbox',
         contexts: ['action'],
