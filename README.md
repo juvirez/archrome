@@ -2,6 +2,8 @@
 
 This Chrome extension uses the [Finicky](https://johnste.github.io/finicky/) app to manage how links are opened between browsers. It automatically redirects all Google Workspace links (e.g., Gmail, Google Drive, Google Docs) to the Chrome browser, while other links open in your default browser (e.g., Arc).
 
+![archrome-screen](https://github.com/user-attachments/assets/ab08eecf-ec93-42be-a39f-edebe694a825)
+
 ## Features
 
 - **Automatic Redirection**: Opens all Google Workspace links directly in Chrome.
@@ -25,6 +27,7 @@ For the extension to work correctly, you must configure the `finicky.js` file in
        match: finicky.matchHostnames([
          "docs.google.com",
          "mail.google.com",
+
          "calendar.google.com",
          "slides.google.com",
          "drive.google.com",
