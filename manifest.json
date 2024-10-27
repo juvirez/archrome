@@ -1,6 +1,7 @@
 {
     "manifest_version": 3,
     "name": "archrome",
+    "description": "Automatically open Google Workspace links in Chrome, all others in your default browser via Finicky.",
     "version": "1.0.2",
     "icons": {
         "16": "icons/archrome.png",
