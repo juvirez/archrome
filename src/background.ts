@@ -86,7 +86,12 @@ function isneedToOpenViaFinicky(tab: chrome.tabs.Tab): boolean {
     if (url === undefined) {
         return false;
     }
-    if (url.hostname.endsWith('onelogin.com') || url.hostname === 'google.com') {
+    const ignoreHostnames = [
+        'google.com',
+        'www.google.com',
+        'accounts.google.com',
+    ];
+    if (url.hostname.endsWith('onelogin.com') || ignoreHostnames.includes(url.hostname)) {
         return false;
     }
 
