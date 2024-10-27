@@ -1,6 +1,6 @@
 # Chrome Extension: Redirect Links with Finicky
 
-This Chrome extension uses the [Finicky](https://johnste.github.io/finicky/) app to manage how links are opened between browsers. It automatically redirects all Google Workspace links (e.g., Gmail, Google Drive, Google Docs) to the Chrome browser, while other links open in your default browser (e.g., Arc).
+This Chrome extension uses the [Finicky](https://github.com/johnste/finicky) app to manage how links are opened between browsers. It automatically redirects all Google Workspace links (e.g., Gmail, Google Drive, Google Docs) to the Chrome browser, while other links open in your default browser (e.g., Arc).
 
 ![archrome-screen](https://github.com/user-attachments/assets/ab08eecf-ec93-42be-a39f-edebe694a825)
 
@@ -12,15 +12,13 @@ This Chrome extension uses the [Finicky](https://johnste.github.io/finicky/) app
 
 ## Installation
 
-1. Install the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/archrome/opfajgjfkddfplcdkclikefccndaonml).
+1. **Install Finicky**:  
+   Download the Finicky app from its [official GitHub page](https://github.com/johnste/finicky/releases/latest) and move the app to your Applications folder and open it.
 
-2. Make sure the Finicky app is properly set up to handle the link redirection.
+2. **Configure Finicky**:  
+   Use the following configuration in your `.finicky.js` file. This configuration ensures Google Workspace links open in Chrome while other links open in your default browser (e.g., Arc).
 
-## Configuration (Required)
-
-For the extension to work correctly, you must configure the `finicky.js` file in your Finicky app with the following settings:
-
-```javascript
+   ```javascript
    module.exports = {
      defaultBrowser: "Arc",
      handlers: [{
@@ -36,5 +34,6 @@ For the extension to work correctly, you must configure the `finicky.js` file in
        browser: "Google Chrome"
      }]
    };
-```
-This configuration ensures that links to Google Workspace services will open in Chrome, while all other links will open in Arc. Without this setup, the extension will not function as intended.
+
+3. **Install the Extension**:  
+   Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/archrome/opfajgjfkddfplcdkclikefccndaonml) and install it in both Chrome and Arc browsers for full functionality.
