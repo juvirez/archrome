@@ -34,6 +34,7 @@ This Chrome extension uses the [Finicky](https://github.com/johnste/finicky) app
        browser: "Google Chrome"
      }]
    };
+   ```
 
 3. **Install the Extension**:  
    Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/archrome/opfajgjfkddfplcdkclikefccndaonml) and install it in both Chrome and Arc browsers for full functionality.
