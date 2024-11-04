@@ -13,7 +13,7 @@ This Chrome extension uses the [Finicky](https://github.com/johnste/finicky) app
 ## Installation
 
 1. **Install Finicky**:  
-   Download the Finicky app from its [official GitHub page](https://github.com/johnste/finicky/releases/latest) and move the app to your Applications folder and open it.
+   Download the Finicky app from its [official GitHub page](https://github.com/johnste/finicky/releases/latest) and move the app to your Applications folder and open it. When prompted, set Finicky as your default browser.
 
 2. **Configure Finicky**:  
    Use the following configuration in your `.finicky.js` file. This configuration ensures Google Workspace links open in Chrome while other links open in your default browser (e.g., Arc).
